@@ -1,0 +1,10 @@
+numpy
+pandas
+matplotlib
+wordcloud
+nltk
+scikit-learn
+flask
+flask-cors
+vaderSentiment
+requests
