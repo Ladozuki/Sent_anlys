@@ -41,9 +41,16 @@ def save_news_to_csv(all_articles, output_file):
     print(f"News data saved to {output_file}")
 
 if __name__ == "__main__":
-    topics = ["shipping", "freight rates", "Ukraine War", "Houthi", "crypto", "Putin"]
-    from_date = "2024-11-16"
-    to_date = "2024-12-16"
+    topics = [
+        "freight rates", "global shipping demand", "container shipping",
+        "dry bulk shipping", "tanker shipping", "oil price fluctuations",
+        "GDP growth", "trade wars", "sanctions", "Ukraine War",
+        "crude oil supply", "LNG shipping", "Suez Canal disruption",
+        "port congestion", "autonomous shipping", "climate change shipping",
+        "IMO regulations", "supply chain logistics"
+    ]
+    from_date = "2024-11-24"
+    to_date = "2024-12-22"
     api_key = "YOUR_NEWSAPI_KEY"
     all_articles = []
 
