@@ -1,0 +1,198 @@
+{
+    "routes": {
+      "TC1": {
+        "distance_nm": 5600,
+        "frequent_vessels": ["LR2", "LR1"],
+        "description": "Major trade route for naphtha and condensates.",
+        "port_fees": 30000,
+        "canal_fees": 300000,
+        "demand_index": 85,
+        "supply_index": 90,
+        "sentiment_score": 0.2
+      },
+      "TC2_37": {
+        "distance_nm": 3000,
+        "frequent_vessels": ["MR"],
+        "description": "Part of the Atlantic CPP trade.",
+        "port_fees": 25000,
+        "canal_fees": 0,
+        "demand_index": 78,
+        "supply_index": 75,
+        "sentiment_score": -0.1
+      },
+      "TC5": {
+        "distance_nm": 5600,
+        "frequent_vessels": ["LR2", "LR1"],
+        "description": "Overlaps with TC1 but focuses on refined products.",
+        "port_fees": 30000,
+        "canal_fees": 300000,
+        "demand_index": 97,
+        "supply_index": 77,
+        "sentiment_score": 0.1
+      },
+      "TC6": {
+        "distance_nm": 1200,
+        "frequent_vessels": ["MR"],
+        "description": "Short-haul trade route for CPP.",
+        "port_fees": 10000,
+        "canal_fees": 0,
+        "demand_index": 70,
+        "supply_index": 65,
+        "sentiment_score": 0.0
+      },
+      "TC7": {
+        "distance_nm": 3700,
+        "frequent_vessels": ["LR2", "LR1"],
+        "description": "Focuses on jet fuel and diesel exports.",
+        "port_fees": 20000,
+        "canal_fees": 250000,
+        "demand_index": 80,
+        "supply_index": 85,
+        "sentiment_score": 0.15
+      },
+      "TC11": {
+        "distance_nm": 2800,
+        "frequent_vessels": ["MR"],
+        "description": "A vital route for CPP in Asia-Pacific.",
+        "port_fees": 18000,
+        "canal_fees": 0,
+        "demand_index": 75,
+        "supply_index": 80,
+        "sentiment_score": -0.05
+      },
+      "TD3C": {
+        "distance_nm": 6500,
+        "frequent_vessels": ["VLCC"],
+        "description": "Major crude oil trade route to Asia.",
+        "port_fees": 50000,
+        "canal_fees": 350000,
+        "demand_index": 92,
+        "supply_index": 88,
+        "sentiment_score": 0.25
+      },
+  
+      "TD8": {
+        "distance_nm": 4600,
+        "frequent_vessels": ["Aframax"],
+        "description": "Focuses on heated crude and fuel oil.",
+        "port_fees": 30000,
+        "canal_fees": 250000,
+        "demand_index": 85,
+        "supply_index": 75,
+        "sentiment_score": 0.05
+      },
+      "TD19": {
+        "distance_nm": 800,
+        "frequent_vessels": ["Aframax"],
+        "description": "A short-haul route for DPP in the Med.",
+        "port_fees": 15000,
+        "canal_fees": 50000,
+        "demand_index": 68,
+        "supply_index": 72,
+        "sentiment_score": 0.0
+      },
+      "TC14": {
+        "distance_nm": 4000,
+        "frequent_vessels": ["MR"],
+        "description": "US Gulf to Continent for diesel and gasoline.",
+        "port_fees": 22000,
+        "canal_fees": 150000,
+        "demand_index": 88,
+        "supply_index": 84,
+        "sentiment_score": 0.18
+      },
+      "TD6": {
+        "distance_nm": 1200,
+        "frequent_vessels": ["Suezmax"],
+        "description": "Short-haul crude route in the Mediterranean.",
+        "port_fees": 12000,
+        "canal_fees": 50000,
+        "demand_index": 66,
+        "supply_index": 69,
+        "sentiment_score": -0.05
+      },
+      "TD15": {
+        "distance_nm": 11000,
+        "frequent_vessels": ["VLCC"],
+        "description": "Long-haul crude route from West Africa to China.",
+        "port_fees": 60000,
+        "canal_fees": 400000,
+        "demand_index": 93,
+        "supply_index": 88,
+        "sentiment_score": 0.22
+      },
+      "TC23": {
+        "distance_nm": 500,
+        "frequent_vessels": ["MR"],
+        "description": "Short-distance refined product route in Europe.",
+        "port_fees": 8000,
+        "canal_fees": 0,
+        "demand_index": 62,
+        "supply_index": 60,
+        "sentiment_score": -0.1
+      }
+    },
+    "vessel_types": {
+      "VLCC": {
+        "daily_consumption": 55,
+        "average_speed_knots": 14,
+        "cargo_capacity_dwt": 320000,
+        "operational_costs_daily": 25000,
+        "fuel_tank_capacity_mt": 3500,
+        "cargo_types": ["Crude Oil"],
+        "capacity_range": [300000, 320000],
+        "sentiment_score": 0.2
+      },
+      "Suezmax": {
+        "daily_consumption": 40,
+        "average_speed_knots": 13,
+        "cargo_capacity_dwt": 150000,
+        "operational_costs_daily": 22000,
+        "fuel_tank_capacity_mt": 3000,
+        "cargo_types": ["Crude Oil", "Refined Products"],
+        "capacity_range": [140000, 150000],
+        "sentiment_score": 0.15
+      },
+      "Aframax": {
+        "daily_consumption": 30,
+        "average_speed_knots": 12,
+        "cargo_capacity_dwt": 100000,
+        "operational_costs_daily": 18000,
+        "fuel_tank_capacity_mt": 2000,
+        "cargo_types": ["Crude Oil", "Fuel Oil"],
+        "capacity_range": [95000, 105000],
+        "sentiment_score": 0.1
+      },
+      "LR2": {
+        "daily_consumption": 40,
+        "average_speed_knots": 13,
+        "cargo_capacity_dwt": 80000,
+        "operational_costs_daily": 18000,
+        "fuel_tank_capacity_mt": 2500,
+        "cargo_types": ["Refined Products"],
+        "capacity_range": [75000, 85000],
+        "sentiment_score": 0.12
+      },
+      "LR1": {
+        "daily_consumption": 35,
+        "average_speed_knots": 12.5,
+        "cargo_capacity_dwt": 60000,
+        "operational_costs_daily": 15000,
+        "fuel_tank_capacity_mt": 2000,
+        "cargo_types": ["Refined Products"],
+        "capacity_range": [55000, 65000],
+        "sentiment_score": 0.1
+      },
+      "MR": {
+        "daily_consumption": 25,
+        "average_speed_knots": 12,
+        "cargo_capacity_dwt": 45000,
+        "operational_costs_daily": 12000,
+        "fuel_tank_capacity_mt": 1500,
+        "cargo_types": ["Gasoline", "Diesel"],
+        "capacity_range": [40000, 50000],
+        "sentiment_score": 0.08
+      }
+    }
+  }
+  
