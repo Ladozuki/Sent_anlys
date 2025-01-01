@@ -3,8 +3,8 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
-class FreightRate(Base):
-    __tablename__ = "freight_rates"
+class Route(Base):
+    __tablename__ = "routes"
     id = Column(Integer, primary_key=True)
     route = Column(String, nullable=False)  # Route code, e.g., 'TD2'
     description = Column(String, nullable=False)  # Route description
@@ -13,7 +13,7 @@ class FreightRate(Base):
     volume = Column(Integer, nullable=False)  # Volume in metric tons
     hull_type = Column(String)  # Hull type, e.g., 'Double hull'
     age_max = Column(Integer)  # Maximum vessel age in years
-    commission = Column(Float)  # Total commission as a percentage
+    commission = Column(Float, nullable= False)  # Total commission as a percentage
 
 class NewsSentiment(Base):
     __tablename__ = "news_sentiment"
