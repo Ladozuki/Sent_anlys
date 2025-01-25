@@ -87,3 +87,5 @@ df = generate_data(samples=450, start_date=date(2024, 1, 1), end_date=date(2024,
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
 df.to_csv(output_path, index=False)
 print(f"Data generated successfully! File saved to {output_path}")
+
+

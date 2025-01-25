@@ -3,12 +3,12 @@ from mpl_toolkits.basemap import Basemap
 
 def create_fuel_prices_map(output_file="fuel_prices_map.png"):
     # Create a figure and axis for the map
-    fig, ax = plt.subplots(figsize=(15, 10))
+    fig, ax = plt.subplots(figsize=(20, 14))  # Increased figure size for better clarity
 
-    # Initialize Basemap for a world map with lighter colors
-    m = Basemap(projection='mill', resolution='c', llcrnrlat=-60, urcrnrlat=80, llcrnrlon=-180, urcrnrlon=180, ax=ax)
-    m.drawcoastlines(color="white")
-    m.drawcountries(color="gray")
+    # Initialize Basemap for a world map
+    m = Basemap(projection='mill', resolution='l', llcrnrlat=-60, urcrnrlat=80, llcrnrlon=-180, urcrnrlon=180, ax=ax)
+    m.drawcoastlines(color="white", linewidth=0.5)
+    m.drawcountries(color="gray", linewidth=0.5)
     m.fillcontinents(color='#6c757d', lake_color='#d4e4f7')
     m.drawmapboundary(fill_color='#d4e4f7')
 
@@ -24,15 +24,15 @@ def create_fuel_prices_map(output_file="fuel_prices_map.png"):
     for location, details in fuel_prices.items():
         lat, lon = details["lat"], details["lon"]
         x, y = m(lon, lat)
-        m.plot(x, y, 'o', markersize=10, color='blue', alpha=0.8)
+        m.plot(x, y, 'o', markersize=15, color='red', alpha=0.9)  # Increased marker size
         prices_text = "\n".join([f"{key}: ${value}/mt" for key, value in details["prices"].items()])
         plt.text(
-            x, y, f"{location}\n{prices_text}", fontsize=10, color="black", ha="left", va="bottom",
-            bbox=dict(facecolor="white", alpha=0.8, edgecolor="black", linewidth=1.5)
+            x, y, f"{location}\n{prices_text}", fontsize=16, color="black", ha="left", va="bottom",
+            bbox=dict(facecolor="white", alpha=0.85, edgecolor="black", linewidth=3, boxstyle="round,pad=1.2")
         )
 
     # Add a title and styling
-    plt.title("Global Fuel Prices by Location (January 2025)", fontsize=12, color="black", pad=20)
+    plt.title("Global Fuel Prices by Location (January 2025)", fontsize=16, color="black", pad=24)
     ax.set_facecolor("#f5f5f5")
 
     # Save the map as an image file

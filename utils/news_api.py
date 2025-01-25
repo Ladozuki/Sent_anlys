@@ -21,6 +21,35 @@ sid = SentimentIntensityAnalyzer()
 
 # Keywords for filtering
 topics = [
+    # Core African Routes
+    "Dangote refinery", "West Africa refined products", "Nigeria oil exports", "intra-African trade",
+    "Nigeria to Europe shipping", "Rotterdam refined products", "Dangote Europe crude", "diesel exports to Europe",
+    "West Africa crude to China", "Nigeria crude to China",
+    "West Africa to UK-Continent", "Bonny to Rotterdam crude","West African oil exports",
+    "Dangote to East Africa", "refined products exports East Africa", "Dar es Salaam imports", "Nigeria refined products",
+
+    # Global Routes for Context
+    "Middle East to East Asia crude", "Singapore oil imports", "China crude imports",
+    "Middle East to Europe refined products", "Middle East Gulf to UK", "refined product flows",
+    "Middle East to Africa oil", "Middle East refined products Africa", "bunker price", "import reductions Africa", 
+    "North African crude to Europe", "Black Sea oil exports", "CPC to Augusta",
+    "Caribbean oil exports", "refined product flows America",
+
+    # General Supporting Context
+    "global oil prices", "freight rates", "maritime logistics Africa", "shipping emissions",
+    "spot prices", "time charter rates", "bunker availability", "Suez Canal", "port congestion",
+    "GDP growth", "OPEC announcements", "trade wars", "sanctions impact on shipping",
+
+    # Newly Added Topics
+    "Frontline crude oil shipping", "Golar LNG", "lpg shipping"
+    "BP refinery", "Shell crude exports", "decarbonization shipping", "green shipping", "vlsfo",
+    "Scorpio Tankers spot rates", "Navios fleet expansion",
+    "Euronav Middle East routes", "Star Bulk rates",
+    "Golden Ocean charter trends", "Danaos shipping updates",
+    "Capital Product Partners tankers", "Teekay Aframax operations", "maritime IOT", "baltic wet index", "North Sea shipping",
+]
+
+list =  [ 
     "freight rates", "global shipping demand",
     "MR or LR1 or Suezmax or Aframax or VLCC", "russia shipping", "Persian-Gulf",
     "Time Charter", "Spot Charter", "Black-sea shipping", "tanker shipping",  "GDP growth", "trade wars", 
