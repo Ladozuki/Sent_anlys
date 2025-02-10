@@ -9,7 +9,7 @@ def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
     
-map_image_path = r"C:\Users\okusa\Sentiment\Sent_anlys\fuel_prices_map.png"
+map_image_path = r"C:\Users\User\Documents\Projects\Sent_anlys\fuel_prices_map.png"
 base64_image = encode_image(map_image_path)
 
 # Resolve absolute paths
