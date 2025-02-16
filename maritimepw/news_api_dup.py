@@ -68,6 +68,30 @@ keywords = [
     "Capital Product Partners tankers", "Teekay Aframax operations", "maritime IOT", "baltic wet index", "North Sea shipping",
 ]
 
+route_dict = {
+    "TD2": "Middle East Gulf to Singapore",
+    "TD3C": "Middle East Gulf to China (VLCC)",
+    "TD6": "Black Sea to Mediterranean (Suezmax)",
+    "TD7": "North Sea to Continent (Aframax)",
+    "TD8": "Kuwait to Singapore",
+    "TD9": "Caribbean to US Gulf (LR1)",
+    "TD15": "West Africa to China (VLCC)",
+    "TD20": "West Africa to UK-Continent (Suezmax)",
+    "TD22": "US Gulf to China",
+    "TD25": "US Gulf to UK-Continent",
+    "TD27": "Guyana to ARA",
+    "TC5": "CPP Middle East Gulf to Japan (LR1)",
+    "TC8": "CPP Middle East Gulf to UK-Continent (LR1)",
+    "TC12": "Naphtha West Coast India to Japan (MR)",
+    "TC15": "Naphtha Mediterranean to Far East (Aframax)",
+    "TC16": "ARA to Offshore Lome (LR1)",
+    "TC17": "CPP Jubail to Dar es Salaam (MR)",
+    "TC18": "CPP US Gulf to Brazil (MR)",
+    "TC19": "CPP Amsterdam to Lagos (MR)",
+    "TC20": "CPP Middle East Gulf to UK-Continent (Aframax)"
+}
+
+
 list =  [ 
     "freight rates", "global shipping demand",
     "MR or LR1 or Suezmax or Aframax or VLCC", "russia shipping", "Persian-Gulf",
@@ -90,13 +114,19 @@ def clean_text(text):
     return text
 
 # Sentiment Analysis Function
+# def analyze_sentiment(text):
+#     sentiment_score = sid.polarity_scores(text)['compound']
+#     sentiment = 'positive' if sentiment_score > 0 else ('negative' if sentiment_score < 0 else 'neutral')
+#     return sentiment_score, sentiment
+
 def analyze_sentiment(text):
     sentiment_score = sid.polarity_scores(text)['compound']
-    sentiment = 'positive' if sentiment_score > 0 else ('negative' if sentiment_score < 0 else 'neutral')
-    return sentiment_score, sentiment
+    return sentiment_score
+
 
 # Fetch News and Save to Database
 def fetch_news(query, from_date, to_date, api_key):
+
     url = "https://newsapi.org/v2/everything"
     params = {
         "q": query,
@@ -105,13 +135,16 @@ def fetch_news(query, from_date, to_date, api_key):
         "sortBy": "relevancy",
         "language": "en",
         "apiKey": api_key
+    
     }
-    pstve_texts, ngtve_texts = [], []
+    # pstve_texts, ngtve_texts = [], []
+
     try:
         response = requests.get(url, params=params)
         if response.status_code == 200:
             articles = response.json().get("articles", [])
             data_list = []
+
             for article in articles:
                 raw_text = (article.get('title', '') + ' ' +
                             article.get('description', '') + ' ' +
@@ -120,11 +153,12 @@ def fetch_news(query, from_date, to_date, api_key):
 
 
                 #Perform sentiment analysis
-                sentiment_score, sentiment = analyze_sentiment(cleaned_text)
-                if sentiment == 'positive':
-                    pstve_texts.append(cleaned_text)
-                elif sentiment == 'negative':
-                    ngtve_texts.append(cleaned_text)
+                sentiment_score = analyze_sentiment(cleaned_text)
+
+                # if sentiment == 'positive':
+                #     pstve_texts.append(cleaned_text)
+                # elif sentiment == 'negative':
+                #     ngtve_texts.append(cleaned_text)
 
                 #Add processed article to the database
                  # Store in list
@@ -160,8 +194,7 @@ if __name__ == "__main__":
     API_KEY = "18d81375ec4f465f83516fbaac3554d2"
 
     for keyword in topics:
-        print(f"Fetching news for: {keyword}")
-        fetch_news(keyword, "2025-01-13", "2025-02-13", API_KEY)
+        fetch_news(keyword, "2025-01-16", "2025-02-16", API_KEY)
                 
 
 # Generate Word Cloud
