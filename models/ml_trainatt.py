@@ -128,6 +128,8 @@ hybrid_model.compile(optimizer="adam", loss="mse")
 hybrid_model.fit([X_sequences, aligned_X_sentiment], y_targets, epochs=20, batch_size=8)
 
 
-# 🔹 Save Model
-hybrid_model.save("models_saved/hybrid_freight_model.h5")
-print("Hybrid Model Training Complete & Saved!")
+# Save the trained model in Keras format
+model_path = "models_saved/hybrid_freight_model.keras"
+hybrid_model.save(model_path)
+print(f"✅ Hybrid Model Saved: {model_path}")
+
