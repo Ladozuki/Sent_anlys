@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Input, Dense, Concatenate, LSTM
+import os
 from transformers import BertTokenizer, TFBertModel
 from sklearn.preprocessing import StandardScaler
 import joblib
@@ -127,9 +128,10 @@ hybrid_model.compile(optimizer="adam", loss="mse")
 # Train Hybrid Model
 hybrid_model.fit([X_sequences, aligned_X_sentiment], y_targets, epochs=20, batch_size=8)
 
+model_dir = "models_saved"
+os.makedirs(model_dir, exist_ok=True)  # Creates the directory if it doesn't exist
 
 # Save the trained model in Keras format
 model_path = "models_saved/hybrid_freight_model.keras"
 hybrid_model.save(model_path)
 print(f"✅ Hybrid Model Saved: {model_path}")
-
