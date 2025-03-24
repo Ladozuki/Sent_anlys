@@ -97,11 +97,22 @@ class MaritimeReportGenerator:
         # Add freight route data
         if "freight_df" in data_package:
             freight_df = data_package["freight_df"]
-            report_data["remaining_routes"] = freight_df.to_dict('records')
+
+            # Filter TD routes (Dirty routes) - limit to 5 rows
+            td_routes = freight_df[freight_df["Route"].str.startswith("TD")].head(5)
             
+            # Filter TC routes (Clean routes) - limit to 5 rows
+            tc_routes = freight_df[freight_df["Route"].str.startswith("TC")].head(5)
+            
+            # Combine the filtered routes
+            filtered_freight = pd.concat([td_routes, tc_routes])
+            
+            # Use the filtered DataFrame instead of the full one
+            report_data["remaining_routes"] = filtered_freight.to_dict('records')
+           
             # Sort routes by TCE change for highlighting
             sorted_routes = freight_df.sort_values("Change (TCE)", ascending=False)
-            report_data["highest_changes"] = sorted_routes.head(5).to_dict('records')
+            report_data["highest_changes"] = sorted_routes.head(4).to_dict('records')
         
         # Add ML predictions if available
         if "predictions_df" in data_package:
@@ -244,6 +255,7 @@ class MaritimeReportGenerator:
         logger.info(f"✅ Report generated successfully: {output_path}")
         return output_path
     
+    
     def get_default_template(self):
         """Return the default report template with ML integration"""
         return """<!DOCTYPE html>
@@ -252,10 +264,11 @@ class MaritimeReportGenerator:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
+    <!-- CSS styles remain unchanged -->
     <style>
         @page {
             size: A4;
-            margin: 20px
+            margin: 20px;
         }
         body {
             font-family: Arial, sans-serif;
@@ -322,7 +335,7 @@ class MaritimeReportGenerator:
             margin-top: 3px;
         }
         table, th, td {
-            border: 1px solid #ccc;
+            border: 1px solid #;
         }
         th, td {
             padding: 2px;
@@ -453,6 +466,36 @@ class MaritimeReportGenerator:
             margin-top: 5px;
             font-style: italic;
         }
+
+        .factors-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .factors-column {
+            flex: 1;
+        }
+
+        .factors-column p {
+            margin-bottom: 3px;
+        }
+
+        .factors {
+            margin-top: 0;
+        }
+        /* Add this to your CSS */
+        .cards-right {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .cards-right .card {
+            flex: 1;
+            /* rest of the card styling */
+        }
     </style>
 </head>
 <body>
@@ -461,12 +504,17 @@ class MaritimeReportGenerator:
 
     <div class="section">
         <div class="text">
-            <h2>Executive Summary</h2>
-            <p><strong>Dangote Refinery</strong> is altering global trade flows—lower imports, higher regional exports, and tanker demand shifts.</p>
-            <p><strong>Crude Supply:</strong> Nigeria's output at <strong>1.5m bpd</strong>, expected to reach <strong>1.8m bpd</strong>, supporting domestic refining.</p>
-            <p><strong>Price Strategy:</strong> Dangote Refinery <strong>raised ex-depot petrol prices by 5% (₦950/L)</strong> amid a <strong>15% crude surge</strong>, balancing refining margins.</p>
-            <p><strong>Market Liberalization:</strong> Local refining stabilizes supply, fuel pricing now tracks global crude, reducing past volatility.</p>
-            
+
+
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #2980b9; padding: 4px 6px; margin-top: 10px;">
+                “Nigeria approved a $45.3M rail link study connecting Badagry, Tin Can, Apapa, and Lekki Ports to inland freight corridors — a strategic leap for West African logistics.” — FEC, 2025
+            </div>
+
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #3498db; padding: 4px 6px; margin-top: 10px;">
+                “From Falcon Eye surveillance to AI-driven inspection systems, Nigeria is fast-tracking maritime digitization to strengthen competitiveness and regional influence.” — Africa Defense Forum, 2025
+            </div>
+
+        
             <!-- ML-POWERED INSIGHTS SECTION -->
             <div class="ml-section">
                 <h2>AI-Powered Market Outlook</h2>
@@ -476,30 +524,6 @@ class MaritimeReportGenerator:
                 <p><strong>Emerging Pattern:</strong> AI analysis detected a correlation between news sentiment and rate changes across West African routes, indicating heightened market sensitivity to refinery developments.</p>
             </div>
 
-            <h2>BRICS & Nigeria</h2>
-            <p><strong>Nigeria aligns with BRICS</strong>, strengthening China-India ties while maintaining Western partnerships.</p>
-            <p><strong>Impacts:</strong> Shift from USD-based settlements, BRICS-backed financing, and Nigeria as a trade corridor.</p>
-            <p><strong>Risks:</strong> Possible US/EU policy shifts if alignment deepens.</p>
-
-            <p><strong>NPA hikes port charges by 15%</strong> to fund urgent infrastructure upgrades and tackle inefficiencies.</p>
-            <p><strong>Challenges:</strong> Aged infrastructure, slow cargo handling, and capacity constraints persist.</p>
-            
-            <h2>Nigeria's Refining Expansion & Market Position</h2>
-            <p><strong>First PMS Export:</strong> Dangote Refinery exported petrol to Cameroon, strengthening Nigeria as a regional fuel hub.</p>
-            <p><strong>Future Outlook:</strong> Refining expansion could increase competition with existing players in Africa's fuel market.</p>
-            <p><strong>Port Harcourt Refinery Resumes Operations:</strong> The first major restart of a state-run refinery in years, now at <strong>80% capacity</strong>.</p>
-            <p><strong>Policy Concerns:</strong> Despite local refining, <strong>NNPC has imported 4B liters of petrol</strong> since October 2024, raising concerns over fuel independence.</p>
-
-            <p><strong>Strategic Rail Connectivity for Nigerian Ports: Federal Executive Council (FEC)</strong> has approved a $45.3 million feasibility study for the development of a rail link connecting major ports in Southwest Nigeria:Badagry Deep Sea Port, Tin Can Island Port, Lagos Port Complex (Apapa), and Lekki Port.</p>
-
-            <p>The proposed route extends to Ijebu-Ode and Kajola, linking into the Lagos-Kano-Maradi railway modernization project.</p>
-
-            <p><strong>Current Status:</strong>  
-            - Apapa Port is the only port currently connected to a standard gauge rail line.  
-            - Narrow gauge rail transport is operational between Lagos and Kano/p> 
-
-            <p><strong>B'Odogwu platform launched</strong> at Tin Can & Apapa for 24-hour cargo clearance.</p>
-            <p><strong>2025 Rollout:</strong> Non-intrusive inspection tech to enhance transparency and efficiency.</p>
 
             <!-- FEATURED ROUTE ANALYSIS -->
             <div class="featured-route">
@@ -508,24 +532,30 @@ class MaritimeReportGenerator:
                 <p><strong>Current TCE:</strong> ${{ featured_route.Current_TCE|int if featured_route.Current_TCE is defined else 0 }} | <strong>Predicted Change:</strong> <span class="{{ 'prediction-up' if featured_route.Predicted_Change > 0 else 'prediction-down' }}">{{ featured_route.Predicted_Change|int }} $/day</span></p>
                 <p><strong>News Sentiment:</strong> {{ "Positive" if featured_route.avg_sentiment > 0 if featured_route.avg_sentiment is defined else "Neutral" }}</p>
                 
-                <p><strong>Key News:</strong></p>
-                <ul class="factors">
-                {% for news in featured_route.key_news %}
-                    <li>{{ news }}</li>
-                {% endfor %}
-                </ul>
+                <div class="factors-container">
+                <div class="factors-column">
+                    <p><strong>Key News:</strong></p>
+                    <ul class="factors">
+                    {% for news in featured_route.key_news %}
+                        <li>{{ news }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
                 
-                <p><strong>Key Factors Driving Prediction:</strong></p>
-                <ul class="factors">
-                {% for factor in featured_route.key_factors %}
-                    <li>{{ factor }}</li>
-                {% endfor %}
-                </ul>
+                <div class="factors-column">
+                    <p><strong>Key Factors Driving Prediction:</strong></p>
+                    <ul class="factors">
+                    {% for factor in featured_route.key_factors %}
+                        <li>{{ factor }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
             </div>
 
             <div class="demarcation"></div>
             <h3 style="text-align: center; margin-top: 16px;">Dirty Routes</h3>
-            <table class="routes">
+                    <table class="routes">
                 <thead>
                     <tr>
                         <th>Route</th>
@@ -533,7 +563,7 @@ class MaritimeReportGenerator:
                         <th>Worldscale</th>
                         <th>TCE ($/day)</th>
                         <th>+/-</th>
-                        <th>AI Forecast</th>
+                        <th>Forecast</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -544,7 +574,7 @@ class MaritimeReportGenerator:
                         <td>{{ route['Worldscale'] }}</td>
                         <td>${{ route['TCE'] }}</td>
                         <td style="color: {{ 'green' if route['Change (TCE)'] > 0 else 'red' }};">
-                            {{ route['Change (TCE)] }}
+                            {{ route['Change (TCE)'] }}
                             {% if route['Change (TCE)'] > 0 %}
                                 &#9650; <!-- Upward arrow -->
                             {% elif route['Change (TCE)'] < 0 %}
@@ -566,7 +596,7 @@ class MaritimeReportGenerator:
             </table>
             <div class="demarcation"></div>
             <h3 style="text-align: center; margin-top: 10px;">Clean Routes</h3>
-            <table class="routes">
+                    <table class="routes">
                 <thead>
                     <tr>
                         <th>Route</th>
@@ -574,7 +604,7 @@ class MaritimeReportGenerator:
                         <th>Worldscale</th>
                         <th>TCE ($/day)</th>
                         <th>+/-</th>
-                        <th>AI Forecast</th>
+                        <th>Forecast</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -606,44 +636,27 @@ class MaritimeReportGenerator:
                 </tbody>
             </table>
 
-            <div class="cards">
-                <div class="card">
-                    <h3>Tanker Recycling Index </h3>
-                    <p><strong>11,437</strong></p>
-                    <p style="color: red;">-73 &#9660;</p>
-                </div>
-                <div class="card">
-                    <h3>Tanker Sale and Purchase Index </h3>
-                    <p><strong>7,623</strong></p>
-                    <p style="color: red;">-3 &#9660;</p>
-                </div>
-                <div class="card">
-                    <h3>Tanker New Building Index </h3>
-                    <p><strong>7,753</strong></p>
-                    <p style="color: red;">-37 &#9660;</p>
-                </div>
-                <!-- NEW CARDS FOR ML METRICS -->
-                <div class="card">
-                    <h3>AI Prediction Accuracy </h3>
-                    <p><strong>{{ (model_metadata.r2|float * 100)|int if model_metadata.r2 is defined else 75 }}%</strong></p>
-                    <p style="color: green;">Model Reliability</p>
-                </div>
-            </div>
+          
         </div>
     
         <div class="charts">
-            <p><strong>Global Refining & Trade Shifts:</strong>  
-            European refiners are <strong>redirecting gasoline & diesel cargoes</strong> to Latin America & Asia, as Nigeria's demand shrinks.  
-            This shift is causing **supply chain realignments**, affecting tanker demand globally.</p>
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #555; padding: 4px 6px; margin-top: 10px;">
+                “Nigeria’s BRICS alignment signals a pivot from USD settlements, with regional corridor ambitions backed by both Eastern and Western partnerships.” — Global Trade Report
+            </div>
 
-            <p><strong>MR Tanker Demand:</strong> Increased exports drive higher demand for MR tankers across West Africa.
-            <strong>VLCC & Suezmax Adjustments:</strong> Declining long-haul VLCC crude imports, replaced by regional Aframax & Suezmax crude movements.
-            <strong>European Refiner Shift:</strong> European gasoline & diesel cargoes are now redirected to Latin America & Asia.</p>
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #6c757d; padding: 4px 6px; margin-top: 10px;">
+                “Africa’s maritime sector is embracing automation, green port tech, and digital corridors — from Lomé to Lagos — to enhance efficiency and reduce emissions.” — MTCC Africa & In On Africa
+            </div>
 
-            <p><strong>Regional Adjustments:</strong>  
-            With Nigeria's refining expansion, Asia-Pacific & Latin America are becoming key demand centers for surplus European refined products.  
-            This shift is realigning global supply chains and impacting tanker demand.</p>
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #3498db; padding: 4px 6px; margin-top: 10px;">
+                “From Falcon Eye surveillance to AI-driven inspection systems, Nigeria is fast-tracking maritime digitization to strengthen competitiveness and regional influence.” — Africa Defense Forum, 2025
+            </div>
 
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #2980b9; padding: 4px 6px; margin-top: 10px;">
+                “Nigeria’s maritime sector is on track to lead West African exports, powered by infrastructure modernization and data-led forecasting.” — Riverlake, 2025 Outlook
+            </div>
+
+            
             <!-- ML VISUALIZATION SECTION -->
             <h2 style="text-align: center; margin-top: 10px;">AI-Powered Rate Forecasts</h2>
             
@@ -677,10 +690,30 @@ class MaritimeReportGenerator:
                 Last updated: {{ model_metadata.training_date if model_metadata.training_date is defined else date }} | 
                 Model accuracy: {{ model_metadata.mae|int if model_metadata.mae is defined else 1500 }} $/day MAE
             </div>
+
+            <div class="cards-right">
+                <div class="card">
+                    <h3>Tanker Recycling Index </h3>
+                    <p><strong>11,437</strong></p>
+                    <p style="color: red;">-73 &#9660;</p>
+                </div>
+                <div class="card">
+                    <h3>Tanker Sale and Purchase Index </h3>
+                    <p><strong>7,623</strong></p>
+                    <p style="color: red;">-3 &#9660;</p>
+                </div>
+                <div class="card">
+                    <h3>Tanker New Building Index </h3>
+                    <p><strong>7,753</strong></p>
+                    <p style="color: red;">-37 &#9660;</p>
+                </div>
+            </div>
+
         </div>
+        
     </div>
 
-    <footer style="text-align: center; font-size: 8px; color: #555; margin-top: px; border-top: 1px solid #ccc; padding-top: 5px;">
+    <footer style="text-align: center; font-size: 8px; color: #555; margin-top: 5px; border-top: 1px solid #ccc; padding-top: 5px;">
         <p>© 2025 Lado Limited. All Rights Reserved.</p>
     </footer>
 </body>
