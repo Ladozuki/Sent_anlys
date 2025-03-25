@@ -93,6 +93,9 @@ class MaritimeReportGenerator:
                 self.encode_image(os.path.join(self.images_dir, "CL=F_price_comparison.png"))
             ]
         }
+
+        report_data["ml_engine_status_image"] = self.encode_image(os.path.join(self.images_dir, "mlengine.png"))
+        report_data["sentiment_analysis_image"] = self.encode_image(os.path.join(self.images_dir, "sent.png"))
         
         # Add freight route data
         if "freight_df" in data_package:
@@ -376,36 +379,34 @@ class MaritimeReportGenerator:
             max-height: 300px;
             object-fit: contain;
         }
-        .cards {
+        .cards-right {
             display: flex;
-            gap: 10px;
-            margin: 5px 0;
-            justify-content: space-around;
-            padding: 5px 0;
+            gap: 5px;
+            justify-content: space-between;
+            margin: 3px 0;
         }
         .card {
-            flex: 1 1 calc(15% - 8px); /* Adjust width of each card */
-            flex-wrap: wrap;
-            padding: 5px;
+            flex: 1;
+            padding: 3px;
             border: 1px solid #ccc;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             text-align: center;
             background-color: #000;
             color: #fff;
         }
         .card h3 {
-            font-size: 10px;
-            margin-bottom: 4px;
+            font-size: 8px;
+            margin: 0 0 2px 0;
             color: #fff;
         }
         .card p {
-            font-size: 8px;
-            margin: 3px 0;
+            font-size: 7px;
+            margin: 1px 0;
             color: #ccc;
         }
         .card strong {
-            font-size: 10px;
+            font-size: 9px;
             color: #fff;
         }
         
@@ -484,18 +485,7 @@ class MaritimeReportGenerator:
         .factors {
             margin-top: 0;
         }
-        /* Add this to your CSS */
-        .cards-right {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .cards-right .card {
-            flex: 1;
-            /* rest of the card styling */
-        }
+        
     </style>
 </head>
 <body>
@@ -505,54 +495,32 @@ class MaritimeReportGenerator:
     <div class="section">
         <div class="text">
 
+        <!-- ML-POWERED INSIGHTS SECTION -->
+            <div class="ml-section">
+                <h2>ML Market Insights</h2>
+                <p><strong>Rate Trajectory:</strong> Our analytics indicate a {{ market_trend }} trend for {{ trend_percentage }}% of monitored routes over the next 7-10 days.</p>
+                <p><strong>Focus Route:</strong> {{ featured_route.Route }} ({{ featured_route.Description }}) projected to {{ "increase" if featured_route.Predicted_Change > 0 else "decrease" }} by <span class="{{ 'prediction-up' if featured_route.Predicted_Change > 0 else 'prediction-down' }}">{{ featured_route.Predicted_Change|abs|int }} $/day</span> with {{ featured_route.Confidence|int }}% confidence.</p>
+                <p><strong>Volatility Assessment:</strong> Market volatility expected to be {{ volatility_level }} based on sentiment-adjusted price momentum.</p>
+                <p><strong>Pattern Recognition:</strong> Our analysis reveals correlation between news sentiment and rate changes across West African routes, suggesting heightened market sensitivity to refinery developments.</p>
+            </div>
+
 
             <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #2980b9; padding: 4px 6px; margin-top: 10px;">
                 “Nigeria approved a $45.3M rail link study connecting Badagry, Tin Can, Apapa, and Lekki Ports to inland freight corridors — a strategic leap for West African logistics.” — FEC, 2025
             </div>
 
-            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #3498db; padding: 4px 6px; margin-top: 10px;">
-                “From Falcon Eye surveillance to AI-driven inspection systems, Nigeria is fast-tracking maritime digitization to strengthen competitiveness and regional influence.” — Africa Defense Forum, 2025
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #28a745; padding: 4px 6px; margin-top: 10px;">
+                “Using onboard sensors and SERTICA, GNV now monitors actual ship efficiency in real time — aiding onshore and crew-based decision-making for sustainable operations.” — RINA Systems
             </div>
 
-        
-            <!-- ML-POWERED INSIGHTS SECTION -->
-            <div class="ml-section">
-                <h2>AI-Powered Market Outlook</h2>
-                <p><strong>Rate Movement Forecast:</strong> Our predictive models indicate a {{ market_trend }} trend for {{ trend_percentage }}% of monitored routes over the next 7-10 days.</p>
-                <p><strong>Key Route Alert:</strong> {{ featured_route.Route }} ({{ featured_route.Description }}) is predicted to {{ "increase" if featured_route.Predicted_Change > 0 else "decrease" }} by <span class="{{ 'prediction-up' if featured_route.Predicted_Change > 0 else 'prediction-down' }}">{{ featured_route.Predicted_Change|abs|int }} $/day</span> with {{ featured_route.Confidence|int }}% confidence.</p>
-                <p><strong>Volatility Index:</strong> Market volatility is expected to be {{ volatility_level }} based on sentiment-adjusted price momentum.</p>
-                <p><strong>Emerging Pattern:</strong> AI analysis detected a correlation between news sentiment and rate changes across West African routes, indicating heightened market sensitivity to refinery developments.</p>
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #ffc107; padding: 4px 6px; margin-top: 10px;">
+                “Brazilian and Algerian barrels arrive at the Dangote refinery via STS and suezmax deliveries — as Africa’s largest plant scales new supply corridors.” — Kpler via TradeWinds
             </div>
 
-
-            <!-- FEATURED ROUTE ANALYSIS -->
-            <div class="featured-route">
-                <h3>Featured Route Analysis: {{ featured_route.Route }}</h3>
-                <p><strong>Description:</strong> {{ featured_route.Description }}</p>
-                <p><strong>Current TCE:</strong> ${{ featured_route.Current_TCE|int if featured_route.Current_TCE is defined else 0 }} | <strong>Predicted Change:</strong> <span class="{{ 'prediction-up' if featured_route.Predicted_Change > 0 else 'prediction-down' }}">{{ featured_route.Predicted_Change|int }} $/day</span></p>
-                <p><strong>News Sentiment:</strong> {{ "Positive" if featured_route.avg_sentiment > 0 if featured_route.avg_sentiment is defined else "Neutral" }}</p>
-                
-                <div class="factors-container">
-                <div class="factors-column">
-                    <p><strong>Key News:</strong></p>
-                    <ul class="factors">
-                    {% for news in featured_route.key_news %}
-                        <li>{{ news }}</li>
-                    {% endfor %}
-                    </ul>
-                </div>
-                
-                <div class="factors-column">
-                    <p><strong>Key Factors Driving Prediction:</strong></p>
-                    <ul class="factors">
-                    {% for factor in featured_route.key_factors %}
-                        <li>{{ factor }}</li>
-                    {% endfor %}
-                    </ul>
-                </div>
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #007BFF; padding: 4px 6px; margin-top: 10px;">
+                “GNV Polaris’ ML-driven performance engine identified two optimal fuel-saving scenarios during sea trials — confirming predictive model alignment with real-time efficiency data.” — GNV Energy Team
             </div>
-            </div>
-
+            
             <div class="demarcation"></div>
             <h3 style="text-align: center; margin-top: 16px;">Dirty Routes</h3>
                     <table class="routes">
@@ -636,24 +604,66 @@ class MaritimeReportGenerator:
                 </tbody>
             </table>
 
+            <div class="cards-right">
+                <div class="card">
+                    <h3>Tanker Recycling</h3>
+                    <p><strong>11,437</strong> <span style="color: red; font-size: 7px;">-73 &#9660;</span></p>
+                </div>
+                <div class="card">
+                    <h3>Sale & Purchase</h3>
+                    <p><strong>7,623</strong> <span style="color: red; font-size: 7px;">-3 &#9660;</span></p>
+                </div>
+                <div class="card">
+                    <h3>New Building</h3>
+                    <p><strong>7,753</strong> <span style="color: red; font-size: 7px;">-37 &#9660;</span></p>
+                </div>
+
+                
+            </div>
+
+            <div style="font-size: 9px; background-color: #e3f2fd; border-left: 3px solid #1976d2; padding: 6px 8px; margin-top: 10px;">
+                📌 <strong>Strategic View:</strong> West African clean product routes under pressure as Dangote supply stabilizes. Our ML model flags TC18 as this week’s most volatile route.
+            </div>
+
           
         </div>
     
         <div class="charts">
+
+        <!-- FEATURED ROUTE ANALYSIS -->
+            <div class="featured-route">
+                <h3>Route Spotlight: {{ featured_route.Route }}</h3>
+                <p><strong>Description:</strong> {{ featured_route.Description }}</p>
+                <p><strong>Current TCE:</strong> ${{ featured_route.Current_TCE|int if featured_route.Current_TCE is defined else 0 }} | <strong>Projected Shift:</strong> <span class="{{ 'prediction-up' if featured_route.Predicted_Change > 0 else 'prediction-down' }}">{{ featured_route.Predicted_Change|int }} $/day</span></p>
+                <p><strong>Market Sentiment:</strong> {{ "Positive" if featured_route.avg_sentiment > 0 if featured_route.avg_sentiment is defined else "Neutral" }}</p>
+                
+                <div class="factors-container">
+                    <div class="factors-column">
+                        <p><strong>Market Developments:</strong></p>
+                        <ul class="factors">
+                        {% for news in featured_route.key_news %}
+                            <li>{{ news }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <div class="factors-column">
+                        <p><strong>Analysis Drivers:</strong></p>
+                        <ul class="factors">
+                        {% for factor in featured_route.key_factors %}
+                            <li>{{ factor }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
             <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #555; padding: 4px 6px; margin-top: 10px;">
                 “Nigeria’s BRICS alignment signals a pivot from USD settlements, with regional corridor ambitions backed by both Eastern and Western partnerships.” — Global Trade Report
             </div>
 
-            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #6c757d; padding: 4px 6px; margin-top: 10px;">
-                “Africa’s maritime sector is embracing automation, green port tech, and digital corridors — from Lomé to Lagos — to enhance efficiency and reduce emissions.” — MTCC Africa & In On Africa
-            </div>
-
-            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #3498db; padding: 4px 6px; margin-top: 10px;">
-                “From Falcon Eye surveillance to AI-driven inspection systems, Nigeria is fast-tracking maritime digitization to strengthen competitiveness and regional influence.” — Africa Defense Forum, 2025
-            </div>
-
-            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #2980b9; padding: 4px 6px; margin-top: 10px;">
-                “Nigeria’s maritime sector is on track to lead West African exports, powered by infrastructure modernization and data-led forecasting.” — Riverlake, 2025 Outlook
+            <div style="font-size: 9px; background-color: #f4f4f4; border-left: 3px solid #dc3545; padding: 4px 6px; margin-top: 10px;">
+                “Nigeria’s refined product imports could nosedive as Dangote refinery hits 85% capacity — a near-term shock for MR tanker owners is looming.” — Gibson Shipbrokers
             </div>
 
             
@@ -666,24 +676,18 @@ class MaritimeReportGenerator:
                 alt="Top Routes by Predicted Rate Changes" 
                 style="max-width: 100%; height: auto; margin: 10px auto; border: 1px solid #ccc;">
             {% endif %}
-                
-            <!-- TCE Comparison -->
-            {% if tce_comparison_image is defined %}
-            <img src="data:image/png;base64,{{ tce_comparison_image }}" 
-                alt="Current vs Predicted TCE Rates" 
-                style="max-width: 100%; height: auto; margin: 10px auto; border: 1px solid #ccc;">
-            {% endif %}
 
-            <h2 style="text-align: center; margin-top: 10px;">Global Bunker Prices</h2>
+            <p style="font-size: 9px; color: #444; text-align: center; margin-top: -5px;">
+                Top 5 predicted rate changes (ML forecast) — East of Suez routes dominate downside risk.
+            </p>
+
+                
+
+
+            <h3 style="text-align: center; margin-top: 8px;">Global Bunker Prices</h3>
             <img src="data:image/png;base64,{{ map_image }}" 
                 alt="Strategic Tanker Routes Map" 
                 style="max-width: 100%; height: auto; margin: 20px auto; border: 1px solid #ccc;">
-
-            {% for image in bzcl_graphs %}
-                <img src="data:image/png;base64,{{ image }}" 
-                    alt="Market Graph" 
-                    style="width: 100%; max-width: 600px; max-height: 300px; object-fit: contain; margin: 5px auto; border: 1px solid #ccc;">
-            {% endfor %}
             
             <div class="model-info">
                 Freight rate predictions generated using XGBoost AI model combining market indicators, news sentiment, and historical patterns. 
@@ -691,26 +695,30 @@ class MaritimeReportGenerator:
                 Model accuracy: {{ model_metadata.mae|int if model_metadata.mae is defined else 1500 }} $/day MAE
             </div>
 
-            <div class="cards-right">
-                <div class="card">
-                    <h3>Tanker Recycling Index </h3>
-                    <p><strong>11,437</strong></p>
-                    <p style="color: red;">-73 &#9660;</p>
-                </div>
-                <div class="card">
-                    <h3>Tanker Sale and Purchase Index </h3>
-                    <p><strong>7,623</strong></p>
-                    <p style="color: red;">-3 &#9660;</p>
-                </div>
-                <div class="card">
-                    <h3>Tanker New Building Index </h3>
-                    <p><strong>7,753</strong></p>
-                    <p style="color: red;">-37 &#9660;</p>
-                </div>
-            </div>
-
         </div>
         
+    </div>
+
+    <div style="page-break-before: always; margin-top: 20px;">
+        <h2 style="text-align: center; color: #333; margin-bottom: 10px;">Maritime Analytics Dashboard</h2>
+        
+        <div style="display: flex; justify-content: space-between; gap: 10px;">
+            <!-- Left column: ML Engine Status -->
+            <div style="flex: 1;">
+                <h3 style="color: #444; font-size: 12px; margin-bottom: 5px;">ML Engine Performance</h3>
+                <img src="data:image/png;base64,{{ ml_engine_status_image }}" 
+                    alt="ML Engine Status" 
+                    style="width: 100%; border: 1px solid #ccc;">
+            </div>
+            
+            <!-- Right column: Sentiment Analysis -->
+            <div style="flex: 1;">
+                <h3 style="color: #444; font-size: 12px; margin-bottom: 5px;">News Sentiment Analysis</h3>
+                <img src="data:image/png;base64,{{ sentiment_analysis_image }}" 
+                    alt="Sentiment Analysis" 
+                    style="width: 100%; border: 1px solid #ccc;">
+            </div>
+        </div>
     </div>
 
     <footer style="text-align: center; font-size: 8px; color: #555; margin-top: 5px; border-top: 1px solid #ccc; padding-top: 5px;">
